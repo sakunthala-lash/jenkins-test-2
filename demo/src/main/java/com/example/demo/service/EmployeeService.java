@@ -12,9 +12,7 @@ import com.example.demo.model.EmployeeEntity;
 import com.example.demo.repository.EmployeeRepository;
 
 import jakarta.persistence.EntityNotFoundException;
-import lombok.extern.slf4j.Slf4j;
 
-//@Slf4j
 @Service
 public class EmployeeService {
 
