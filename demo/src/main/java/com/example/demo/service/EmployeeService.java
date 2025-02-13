@@ -29,7 +29,7 @@ public class EmployeeService {
         EmployeeEntity employee = employeeRepository.findById(id).orElseThrow();
 
         String nullString = null;
-        nullString.length(); // This will trigger a NullPointerException
+        nullString.length(); 
 
         return employee;
     }
