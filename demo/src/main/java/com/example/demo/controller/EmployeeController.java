@@ -34,11 +34,11 @@ public class EmployeeController {
 
     @PostMapping
     public ResponseEntity<EmployeeEntity> createEmployee(@RequestBody @Valid EmployeeEntity employee) {
-        log.info("Log level is info for create employee: {}", employee);  //INFO
-        log.trace("Log level is trace for create employee: {}", employee); //TRACE
-        log.debug("Log level is debug for create employee: {}", employee);  // DEBUG
-        log.warn("Log level is warn for create employee: {}", employee);  // WARN
-        log.error("Log level is error for create employee: {}", employee); //ERROR
+        logger.info("Log level is info for create employee: {}", employee);  //INFO
+        logger.trace("Log level is trace for create employee: {}", employee); //TRACE
+        logger.debug("Log level is debug for create employee: {}", employee);  // DEBUG
+        logger.warn("Log level is warn for create employee: {}", employee);  // WARN
+        logger.error("Log level is error for create employee: {}", employee); //ERROR
         EmployeeEntity employeeResult =  employeeService.createEmployee(employee);
         return new ResponseEntity<>(employeeResult, HttpStatus.CREATED);
     }
