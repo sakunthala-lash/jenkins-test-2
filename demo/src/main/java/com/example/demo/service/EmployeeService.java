@@ -1,0 +1,66 @@
+package com.example.demo.service;
+
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.example.demo.exception.ItemNotFoundException;
+import com.example.demo.model.EmployeeEntity;
+import com.example.demo.repository.EmployeeRepository;
+
+import jakarta.persistence.EntityNotFoundException;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Service
+public class EmployeeService {
+
+    private static final Logger logger = LoggerFactory.getLogger(EmployeeService.class);
+
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
+    public List<EmployeeEntity> getAllEmployees() {
+        return employeeRepository.findAll();
+    }
+
+    public EmployeeEntity getEmployeeById(Long id) {
+        EmployeeEntity employee = employeeRepository.findById(id).orElseThrow();
+
+        // Forcefully access a null object
+        String nullString = null;
+        nullString.length(); // This will trigger a NullPointerException
+
+        return employee;
+    }
+
+    public EmployeeEntity createEmployee(EmployeeEntity employee) {
+        return employeeRepository.save(employee);
+    }
+
+    public EmployeeEntity updateEmployee(Long id, EmployeeEntity employeeDetails) {
+        logger.info("Updating employee with ID: {}", id);
+
+        EmployeeEntity employee = employeeRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Employee not found with ID: " + id));
+
+        employee.setName(employeeDetails.getName());
+        employee.setSalary(employeeDetails.getSalary());
+
+        EmployeeEntity updatedEmployee = employeeRepository.save(employee);
+
+        logger.debug("Successfully updated employee: {}", updatedEmployee);
+        return updatedEmployee;
+    }
+
+    public void deleteEmployee(Long id) {
+        if (!employeeRepository.existsById(id)) {
+			logger.info("ID {} not found for the employee deletion", id);
+			throw new ItemNotFoundException("Item not found... Please try again.");
+		}
+        employeeRepository.deleteById(id);
+    }
+}
