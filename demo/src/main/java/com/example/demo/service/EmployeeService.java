@@ -28,7 +28,6 @@ public class EmployeeService {
     public EmployeeEntity getEmployeeById(Long id) {
         EmployeeEntity employee = employeeRepository.findById(id).orElseThrow();
 
-        // Forcefully access a null object
         String nullString = null;
         nullString.length(); // This will trigger a NullPointerException
 
