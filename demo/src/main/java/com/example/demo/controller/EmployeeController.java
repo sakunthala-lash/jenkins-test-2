@@ -27,14 +27,14 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/employees")
 public class EmployeeController {
 
-    private static final Logger log = LoggerFactory.getLogger(EmployeeController.class);
+    private static final Logger logger = LoggerFactory.getLogger(EmployeeController.class);
 
     @Autowired
     private EmployeeService employeeService;
 
     @PostMapping
     public ResponseEntity<EmployeeEntity> createEmployee(@RequestBody @Valid EmployeeEntity employee) {
-        logger.info("Log level is info for create employee: {}", employee);  //
+        logger.info("Log level is info for create employee: {}", employee);  
         logger.trace("Log level is trace for create employee: {}", employee); 
         logger.debug("Log level is debug for create employee: {}", employee);  
         logger.warn("Log level is warn for create employee: {}", employee);  
