@@ -42,6 +42,7 @@ public class EmployeeController {
         return new ResponseEntity<>(employeeResult, HttpStatus.CREATED);
     }
 
+
     @GetMapping
     public List<EmployeeEntity> getAllEmployees() {
         return employeeService.getAllEmployees();
