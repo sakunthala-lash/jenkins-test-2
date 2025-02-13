@@ -39,7 +39,7 @@ public class EmployeeService {
     }
 
     public EmployeeEntity updateEmployee(Long id, EmployeeEntity employeeDetails) {
-        logger.info("Updating employee with ID {}", id);
+        logger.info("Updating employee with ID: {}", id);
 
         EmployeeEntity employee = employeeRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Employee not found with ID: " + id));
