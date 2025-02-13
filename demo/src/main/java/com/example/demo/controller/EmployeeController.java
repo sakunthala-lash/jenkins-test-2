@@ -22,7 +22,6 @@ import com.example.demo.service.EmployeeService;
 import jakarta.validation.Valid;
 
 
-//@Slf4j
 @RestController
 @RequestMapping("/employees")
 public class EmployeeController {
