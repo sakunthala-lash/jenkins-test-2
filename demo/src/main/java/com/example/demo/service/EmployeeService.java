@@ -29,7 +29,7 @@ public class EmployeeService {
         EmployeeEntity employee = employeeRepository.findById(id).orElseThrow();
 
         String nullString = null;
-        nullString.length(); 
+        nullString.length(); //For test
 
         return employee;
     }
@@ -52,7 +52,7 @@ public class EmployeeService {
         log.debug("Successfully updated employee: {}", updatedEmployee);
         return updatedEmployee;
     }
-    
+
 
     public void deleteEmployee(Long id) {
         if (!employeeRepository.existsById(id)) {
