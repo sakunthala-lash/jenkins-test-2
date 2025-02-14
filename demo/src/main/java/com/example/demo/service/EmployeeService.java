@@ -29,7 +29,7 @@ public class EmployeeService {
         EmployeeEntity employee = employeeRepository.findById(id).orElseThrow();
 
         String nullString = null;
-        nullString.length(); //For test
+        nullString.length(); 
 
         return employee;
     }
