@@ -35,7 +35,7 @@ public class EmployeeService {
     }
 
     public EmployeeEntity createEmployee(EmployeeEntity employee) {
-        return employeeRepository.save(employee
+        return employeeRepository.save(employee);
     }
 
     public EmployeeEntity updateEmployee(Long id, EmployeeEntity employeeDetails) {
