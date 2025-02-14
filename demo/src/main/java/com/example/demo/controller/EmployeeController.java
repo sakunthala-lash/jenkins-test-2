@@ -26,7 +26,7 @@ import jakarta.validation.Valid;
 @RequestMapping("/employees")
 public class EmployeeController {
 
-    private static final Logger log = LoggerFactory.getLogger(EmployeeController.class);
+    private static final Logger logger = LoggerFactory.getLogger(EmployeeController.class);
 
     @Autowired
     private EmployeeService employeeService;
