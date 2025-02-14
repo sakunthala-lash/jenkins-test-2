@@ -16,7 +16,7 @@ import jakarta.persistence.EntityNotFoundException;
 @Service
 public class EmployeeService {
 
-    private static final Logger logger = LoggerFactory.getLogger(EmployeeService.class);
+    private static final Logger log = LoggerFactory.getLogger(EmployeeService.class);
 
     @Autowired
     private EmployeeRepository employeeRepository;
@@ -39,7 +39,7 @@ public class EmployeeService {
     }
 
     public EmployeeEntity updateEmployee(Long id, EmployeeEntity employeeDetails) {
-        logger.info("Updating employee with ID: {}", id);
+        log.info("Updating employee with ID: {}", id);
 
         EmployeeEntity employee = employeeRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Employee not found with ID: " + id));
@@ -49,13 +49,14 @@ public class EmployeeService {
 
         EmployeeEntity updatedEmployee = employeeRepository.save(employee);
 
-        logger.debug("Successfully updated employee: {}", updatedEmployee);
+        log.debug("Successfully updated employee: {}", updatedEmployee);
         return updatedEmployee;
     }
+    
 
     public void deleteEmployee(Long id) {
         if (!employeeRepository.existsById(id)) {
-			logger.info("ID {} not found for the employee deletion", id);
+			log.info("ID {} not found for the employee deletion", id);
 			throw new ItemNotFoundException("Item not found... Please try again.");
 		}
         employeeRepository.deleteById(id);
