@@ -29,6 +29,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<String> handleEntityNotFoundException(EntityNotFoundException ex) {
+        
         logger.warn("Warn level EntityNotFoundException with message only: {}", ex.getMessage()); 
         logger.error("Error level EntityNotFoundException with message only: {}", ex.getMessage());
         logger.info("Info level EntityNotFoundException with message only: {}", ex.getMessage());
