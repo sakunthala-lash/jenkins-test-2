@@ -4,7 +4,6 @@ pipeline {
     environment {
         GITHUB_REPO = 'https://github.com/sakunthala-lash/jenkins-test-2.git'
     }
-
     stages {
         stage('Checkout') {
             steps {
