@@ -33,7 +33,6 @@ public class EmployeeController {
 
     @PostMapping
     public ResponseEntity<EmployeeEntity> createEmployee(@RequestBody @Valid EmployeeEntity employee) {
-        
         logger.info("Log level is info for create employee: {}", employee);  
         logger.trace("Log level is trace for create employee: {}", employee); 
         logger.debug("Log level is debug for create employee: {}", employee);  
