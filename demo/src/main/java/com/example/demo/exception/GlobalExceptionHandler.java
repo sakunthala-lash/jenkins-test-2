@@ -26,7 +26,6 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleConstraintViolationException(ConstraintViolationException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
-
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<String> handleEntityNotFoundException(EntityNotFoundException ex) {
 
@@ -38,6 +37,8 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
+
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleGeneralException(Exception ex) {
         logger.error("Error level Unhandled exception with message and stack trace: {}", ex.getMessage(), ex); 
@@ -47,6 +48,10 @@ public class GlobalExceptionHandler {
         logger.debug("Debug level Unhandled exception with message and stack trace: {}", ex.getMessage(), ex);
         return new ResponseEntity<>("An unexpected error occurred: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+
+
+
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleValidationException(MethodArgumentNotValidException ex) {
@@ -63,4 +68,8 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 
+
+
+
+    
 }
