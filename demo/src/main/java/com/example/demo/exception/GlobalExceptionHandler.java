@@ -26,6 +26,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleConstraintViolationException(ConstraintViolationException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
+
+    
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<String> handleEntityNotFoundException(EntityNotFoundException ex) {
 
@@ -71,5 +73,5 @@ public class GlobalExceptionHandler {
 
 
 
-    
+
 }
