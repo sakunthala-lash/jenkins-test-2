@@ -20,10 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
-
-
-
+    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
      
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<String> handleConstraintViolationException(ConstraintViolationException ex) {
