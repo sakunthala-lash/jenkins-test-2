@@ -15,14 +15,14 @@ pipeline {
                         checkout([
                             $class: 'GitSCM',
                             branches: [[name: "refs/pull/${env.CHANGE_ID}/merge"]],
-                            userRemoteConfigs: [[url: "${GIT_REPO}"]]
+                            userRemoteConfigs: [[url: "${GITHUB_REPO}"]]
                         ])
                     } else {
                         // Checkout main branch if not triggered by a PR
                         checkout([
                             $class: 'GitSCM',
                             branches: [[name: 'refs/heads/main']],
-                            userRemoteConfigs: [[url: "${GIT_REPO}"]]
+                            userRemoteConfigs: [[url: "${GITHUB_REPO}"]]
                         ])
                     }
                 }
