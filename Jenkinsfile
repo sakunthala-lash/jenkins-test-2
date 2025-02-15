@@ -19,7 +19,7 @@ pipeline {
                         ])
                     } else {
                         // Checkout main branch if not triggered by a PR
-                        echo "Building branch: ${env.BRANCH_NAME}"
+                        //echo "Building branch: ${env.BRANCH_NAME}"
                         checkout([
                             $class: 'GitSCM',
                             branches: [[name: 'refs/heads/main']],
