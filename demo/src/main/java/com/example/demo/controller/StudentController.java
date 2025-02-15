@@ -27,7 +27,7 @@ public class StudentController {
     private StudentService studentService;
 
     @GetMapping
-    public List<StudentEntity> getAllStudents() { //for get all
+    public List<StudentEntity> getAllStudents() { //for get alllll..
         return studentService.getAllStudents();
     }
 
