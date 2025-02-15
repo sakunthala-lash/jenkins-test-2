@@ -8,11 +8,24 @@ pipeline {
         stage('Checkout') {
             steps {
                 script {
-                    checkout([
-                        $class: 'GitSCM',
-                        branches: [[name: "refs/heads/${env.GIT_BRANCH}"]],
-                        userRemoteConfigs: [[url: GITHUB_REPO]]
-                    ])
+                     // If the build is triggered by a pull request, use the PR reference
+                    if (env.CHANGE_ID) {
+                        echo "Building Pull Request #${env.CHANGE_ID}"
+                        // Checkout PR commit
+                        checkout([
+                            $class: 'GitSCM',
+                            branches: [[name: "refs/pull/${env.CHANGE_ID}/merge"]],
+                            userRemoteConfigs: [[url: "${GIT_REPO}"]]
+                        ])
+                    } else {
+                        // Checkout main branch if not triggered by a PR
+                        echo "Building branch: ${env.BRANCH_NAME}"
+                        checkout([
+                            $class: 'GitSCM',
+                            branches: [[name: 'refs/heads/main']],
+                            userRemoteConfigs: [[url: "${GIT_REPO}"]]
+                        ])
+                    }
                 }
             }
         }
@@ -28,9 +41,6 @@ pipeline {
 
 
         stage('Build') {
-            when {
-                expression { env.CHANGE_ID != null } // Run only for PRs
-            }
             steps {
                 script {
                     try {
