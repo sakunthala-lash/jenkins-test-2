@@ -4,41 +4,23 @@ pipeline {
     environment {
         GITHUB_REPO = 'https://github.com/sakunthala-lash/jenkins-test-2.git'
     }
+
     stages {
         stage('Checkout') {
             steps {
                 script {
-                     // If the build is triggered by a pull request, use the PR reference
-                    if (env.CHANGE_ID) {
-                        echo "Building Pull Request #${env.CHANGE_ID}"
-                        // Checkout PR commit
-                        checkout([
-                            $class: 'GitSCM',
-                            branches: [[name: "refs/pull/${env.CHANGE_ID}/merge"]],
-                            userRemoteConfigs: [[url: "${GITHUB_REPO}"]]
-                        ])
-                    } else {
-                        // Checkout main branch if not triggered by a PR
-                        echo "Building for all branches"
-                        checkout([
-                            $class: 'GitSCM',
-                            branches: [[name: 'refs/heads/*']],
-                            userRemoteConfigs: [[url: "${GITHUB_REPO}"]]
-                        ])
-                    }
-                }
-            }
-        }
-        stage('Debug PR Variables') {
-            steps {
-                script {
-                    echo "BRANCH_NAME: ${env.BRANCH_NAME}"
-                    echo "CHANGE_ID: ${env.CHANGE_ID}"
-                    echo "CHANGE_TARGET: ${env.CHANGE_TARGET}"
-                }
-            }
-        }
+                      def branch = scm.branches[0].name.replaceFirst("*/", "")
+                    echo "Detected Branch: ${branch}"
 
+                        checkout([
+                        $class: 'GitSCM',
+                        branches: [[name: "refs/heads/${branch}"]],
+                        userRemoteConfigs: [[url: env.GITHUB_REPO]]
+                    ])
+                    
+                }
+            }
+        }
 
         stage('Build') {
             steps {
@@ -59,11 +41,13 @@ pipeline {
     post {
         success {
             script {
+                echo "IN THE POST SUCCESS"
                 githubNotify('success', 'Jenkins build and tests passed!')
             }
         }
         failure {
             script {
+                echo "IN THE POST FAILURE"
                 githubNotify('failure', 'Build or tests failed. Fix before merging!')
             }
         }
@@ -72,7 +56,10 @@ pipeline {
 
 def githubNotify(String status, String description) {
     withCredentials([string(credentialsId: 'id', variable: 'GITHUB_TOKEN')]) {
-        def commitHash = bat(script: 'git rev-parse HEAD', returnStdout: true).trim().split("\r?\n")[-1].trim()
+        def commitHash = bat(script: 'git rev-parse HEAD', returnStdout: true).trim().replaceAll("\r\n", "").replaceAll("\n", "")
+        
+        echo "Current Commit SHA: ${commitHash}"
+                            echo "Detected Branch: ${branch}"
 
         bat """
             curl -X POST -H "Authorization: token %GITHUB_TOKEN%" ^
@@ -82,3 +69,4 @@ def githubNotify(String status, String description) {
         """
     }
 }
+
