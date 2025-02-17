@@ -52,11 +52,13 @@ public class StudentController {
         return new ResponseEntity<>(studentService.updateStudent(id, studentDetails), HttpStatus.OK);
     }
 
-    
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteStudent(@PathVariable Long id) {
         studentService.deleteStudent(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    
 }
