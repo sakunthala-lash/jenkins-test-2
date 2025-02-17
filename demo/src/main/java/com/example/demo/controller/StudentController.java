@@ -30,6 +30,7 @@ public class StudentController {
     public List<StudentEntity> getAllStudents() {
         return studentService.getAllStudents();
     }
+    
 
     @GetMapping("/{id}")
     public ResponseEntity<StudentEntity> getStudentById(@PathVariable Long id) {
