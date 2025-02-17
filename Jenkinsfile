@@ -59,7 +59,6 @@ def githubNotify(String status, String description) {
         def commitHash = bat(script: 'git rev-parse HEAD', returnStdout: true).trim().replaceAll("\r\n", "").replaceAll("\n", "")
         
         echo "Current Commit SHA: ${commitHash}"
-                            echo "Detected Branch: ${branch}"
 
         bat """
             curl -X POST -H "Authorization: token %GITHUB_TOKEN%" ^
