@@ -31,12 +31,15 @@ public class StudentController {
         return studentService.getAllStudents();
     }
 
+
     @GetMapping("/{id}")
     public ResponseEntity<StudentEntity> getStudentById(@PathVariable Long id) {
         StudentEntity student = studentService.getStudentById(id);
         return student != null ? new ResponseEntity<>(student, HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+
+    
     @PostMapping
     public ResponseEntity<StudentEntity> createStudent(@RequestBody @Valid StudentEntity student) {
         return new ResponseEntity<>(studentService.createStudent(student), HttpStatus.CREATED);
