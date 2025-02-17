@@ -39,12 +39,14 @@ public class StudentController {
     }
 
 
-    
+
     @PostMapping
     public ResponseEntity<StudentEntity> createStudent(@RequestBody @Valid StudentEntity student) {
         return new ResponseEntity<>(studentService.createStudent(student), HttpStatus.CREATED);
     }
 
+
+    
     @PutMapping("/{id}")
     public ResponseEntity<StudentEntity> updateStudent(@PathVariable Long id, @RequestBody @Valid StudentEntity studentDetails) {
         return new ResponseEntity<>(studentService.updateStudent(id, studentDetails), HttpStatus.OK);
