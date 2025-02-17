@@ -41,7 +41,7 @@ public class GlobalExceptionHandler {
 
 
 
-    
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleGeneralException(Exception ex) {
         logger.error("Error level Unhandled exception with message and stack trace: {}", ex.getMessage(), ex); 
@@ -51,6 +51,7 @@ public class GlobalExceptionHandler {
         logger.debug("Debug level Unhandled exception with message and stack trace: {}", ex.getMessage(), ex);
         return new ResponseEntity<>("An unexpected error occurred: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
+    
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleValidationException(MethodArgumentNotValidException ex) {
