@@ -23,6 +23,7 @@ import jakarta.validation.Valid;
 @RequestMapping("/students")
 public class StudentController {
 
+    
     @Autowired
     private StudentService studentService;
 
@@ -60,5 +61,5 @@ public class StudentController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    
+
 }
