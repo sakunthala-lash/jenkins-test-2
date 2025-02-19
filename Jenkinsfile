@@ -3,31 +3,21 @@ pipeline {
 
     environment {
         GITHUB_REPO = 'https://github.com/sakunthala-lash/jenkins-test-2.git'
+        BRANCH_NAME = jsonPath(triggerPayload, '$.pull_request.head.ref')
+        COMMIT_SHA = jsonPath(triggerPayload, '$.pull_request.head.sha')
     }
 
     stages {
-        stage('Extract Payload Data') {
+        stage('Extract Payload Datas') {
             steps {
                 script {
-                    // Debug: Print the triggerPayload
                     echo "Trigger Payload: ${triggerPayload}"
 
                     try {
-                        // Assuming triggerPayload is a valid JSON string
-                        def jsonSlurper = new groovy.json.JsonSlurper()
-                        def parsedPayload = jsonSlurper.parseText(triggerPayload)
-
-                        // Extract values from the parsed payload
-                        def branchName = parsedPayload.pull_request.head.ref
-                        def commitSHA = parsedPayload.pull_request.head.sha
-
-                        // Assign them to environment variables
-                        env.BRANCH_NAME = branchName
-                        env.COMMIT_SHA = commitSHA
-
+                       
                         // Debug: Print values
-                        echo "Branch Name: ${env.BRANCH_NAME}"
-                        echo "Commit SHA: ${env.COMMIT_SHA}"
+                        echo "Branch Name: ${BRANCH_NAME}"
+                        echo "Commit SHA: ${COMMIT_SHA}"
                     } catch (Exception e) {
                         echo "Error parsing triggerPayload: ${e.message}"
                     }
@@ -41,7 +31,7 @@ pipeline {
                     echo "Building for branch: ${env.BRANCH_NAME}"
                     checkout([
                         $class: 'GitSCM',
-                        branches: [[name: "refs/heads/${env.BRANCH_NAME}"]],
+                        branches: [[name: "refs/heads/${BRANCH_NAME}"]],
                         userRemoteConfigs: [[url: "${GITHUB_REPO}"]]
                     ])
                 }
