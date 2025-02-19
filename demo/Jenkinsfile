@@ -19,7 +19,7 @@ pipeline {
                         ])
                     } else {
                         // Checkout main branch if not triggered by a PR
-                        echo "Building for all branches"
+                        echo "Building for all branches Else section"
                         checkout([
                             $class: 'GitSCM',
                             branches: [[name: 'refs/heads/*']],
