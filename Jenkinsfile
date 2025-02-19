@@ -19,10 +19,10 @@ pipeline {
                         ])
                     } else {
                         // Checkout main branch if not triggered by a PR
-                        echo "Building for all branches Else section"
+                        echo "Building for all branches."
                         checkout([
                             $class: 'GitSCM',
-                            branches: [[name: 'refs/heads/*']],
+                            branches: [[name: '**']],
                             userRemoteConfigs: [[url: "${GITHUB_REPO}"]]
                         ])
                     }
