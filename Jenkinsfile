@@ -3,8 +3,8 @@ pipeline {
 
     environment {
         GITHUB_REPO = 'https://github.com/sakunthala-lash/jenkins-test-2.git'
-        BRANCH_NAME = jsonPath(triggerPayload, '$.pull_request.head.ref')
-        COMMIT_SHA = jsonPath(triggerPayload, '$.pull_request.head.sha')
+        BRANCH_NAME = '$.pull_request.head.ref'
+        COMMIT_SHA = '$.pull_request.head.sha'
     }
 
     stages {
