@@ -4,36 +4,31 @@ pipeline {
     environment {
         GITHUB_REPO = 'https://github.com/sakunthala-lash/jenkins-test-2.git'
     }
-
     stages {
-        stage('Display Ref') {
-            steps {
-                script {
-                    // Access the Git ref (branch or tag) on Windows using Batch commands
-                    def gitRef = bat(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
-                    echo "The Git reference (ref) is: ${gitRef}"
-                    
-                    // Get commit hash from the current HEAD
-                    def commitHash = bat(script: 'git rev-parse HEAD', returnStdout: true).trim()
-                    echo "Building commit: ${commitHash}"
-                }
-            }
-        }
-        
         stage('Checkout') {
             steps {
                 script {
-                    echo "Building for PR branch: ${params.GIT_BRANCH}"
-                    
-                    // Checkout specific Git ref
-                    checkout([
-                        $class: 'GitSCM',
-                        branches: [[name: "*/${gitRef}"]],
-                        userRemoteConfigs: [[url: "${GITHUB_REPO}"]]
-                    ])
+                        echo "Building for all branches"
+                        checkout([
+                            $class: 'GitSCM',
+                            branches: [[name: 'refs/heads/*']],
+                            userRemoteConfigs: [[url: "${GITHUB_REPO}"]]
+                        ])
                 }
             }
         }
+        stage('List All Environment Variables') {
+            steps {
+                script {
+                    // Iterate through all environment variables and print them
+                    echo "Listing all available environment variables:"
+                    env.each { key, value ->
+                        echo "${key} = ${value}"
+                    }
+                }
+            }
+        }
+
 
         stage('Build') {
             steps {
@@ -43,7 +38,7 @@ pipeline {
                             bat 'mvn clean install'
                         }
                     } catch (Exception e) {
-                        githubNotify('failure', 'Maven build failed. Check logs.', commitHash)
+                        githubNotify('failure', 'Maven build failed. Check logs.')
                         throw e
                     }
                 }
@@ -54,21 +49,21 @@ pipeline {
     post {
         success {
             script {
-                githubNotify('success', 'Jenkins build and tests passed!', commitHash)
+                githubNotify('success', 'Jenkins build and tests passed!')
             }
         }
         failure {
             script {
-                githubNotify('failure', 'Build or tests failed. Fix before merging!', commitHash)
+                githubNotify('failure', 'Build or tests failed. Fix before merging!')
             }
         }
     }
 }
 
-def githubNotify(String status, String description, String commitHash) {
+def githubNotify(String status, String description) {
     withCredentials([string(credentialsId: 'id', variable: 'GITHUB_TOKEN')]) {
-        echo "Notifying GitHub for commit: ${commitHash}"
-
+        def commitHash = bat(script: 'git rev-parse HEAD', returnStdout: true).trim().split("\r?\n")[-1].trim()
+ echo "commitHash: {$commitHash}"
         bat """
             curl -X POST -H "Authorization: token %GITHUB_TOKEN%" ^
             -H "Accept: application/vnd.github.v3+json" ^
