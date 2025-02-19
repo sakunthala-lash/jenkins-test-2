@@ -48,8 +48,6 @@ public class EmployeeController {
         return employeeService.getAllEmployees();
     }
 
-    
-
     @GetMapping("/{id}")
     public ResponseEntity<EmployeeEntity> getEmployeeById(@PathVariable Long id) {
         EmployeeEntity employee = employeeService.getEmployeeById(id);
