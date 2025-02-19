@@ -12,7 +12,7 @@ pipeline {
                     echo "Building for PR branch: ${params.GIT_BRANCH}"
                     checkout([
                         $class: 'GitSCM',
-                        branches: [[name: "${params.GIT_BRANCH}"]],  // Correct PR branch
+                        branches: [[name: "origin/${params.GIT_BRANCH}"]],
                         userRemoteConfigs: [[url: "${GITHUB_REPO}"]]
                     ])
                 }
