@@ -30,7 +30,6 @@ pipeline {
         stage('List All Environment Variables') {
             steps {
                 script {
-                    // Print all environment variables for debugging
                     echo "Listing all available environment variables:"
                     bat 'set'
                 }
