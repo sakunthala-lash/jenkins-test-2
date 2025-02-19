@@ -12,26 +12,29 @@ pipeline {
                     // Access the Git ref (branch or tag) on Windows using Batch commands
                     def gitRef = bat(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
                     echo "The Git reference (ref) is: ${gitRef}"
-                    def branch = params.BRANCH
-                    echo "Building branch: ${branch}"
-                    def COMMIT = params.COMMIT
-                    echo "Building branch commit: ${COMMIT}"
+                    
+                    // Get commit hash from the current HEAD
+                    def commitHash = bat(script: 'git rev-parse HEAD', returnStdout: true).trim()
+                    echo "Building commit: ${commitHash}"
                 }
             }
         }
+        
         stage('Checkout') {
             steps {
                 script {
                     echo "Building for PR branch: ${params.GIT_BRANCH}"
+                    
+                    // Checkout specific Git ref
                     checkout([
                         $class: 'GitSCM',
-                        branches: [[name:  ${gitRef}]],
+                        branches: [[name: "*/${gitRef}"]],
                         userRemoteConfigs: [[url: "${GITHUB_REPO}"]]
                     ])
                 }
             }
         }
-        
+
         stage('Build') {
             steps {
                 script {
@@ -40,7 +43,7 @@ pipeline {
                             bat 'mvn clean install'
                         }
                     } catch (Exception e) {
-                        githubNotify('failure', 'Maven build failed. Check logs.', params.GIT_COMMIT)
+                        githubNotify('failure', 'Maven build failed. Check logs.', commitHash)
                         throw e
                     }
                 }
@@ -51,12 +54,12 @@ pipeline {
     post {
         success {
             script {
-                githubNotify('success', 'Jenkins build and tests passed!', params.GIT_COMMIT)
+                githubNotify('success', 'Jenkins build and tests passed!', commitHash)
             }
         }
         failure {
             script {
-                githubNotify('failure', 'Build or tests failed. Fix before merging!', params.GIT_COMMIT)
+                githubNotify('failure', 'Build or tests failed. Fix before merging!', commitHash)
             }
         }
     }
