@@ -11,16 +11,11 @@ pipeline {
         stage('Extract Payload Datas') {
             steps {
                 script {
-                    echo "Trigger Payload: ${triggerPayload}"
-
-                    try {
-                       
+                  
                         // Debug: Print values
                         echo "Branch Name: ${BRANCH_NAME}"
                         echo "Commit SHA: ${COMMIT_SHA}"
-                    } catch (Exception e) {
-                        echo "Error parsing triggerPayload: ${e.message}"
-                    }
+                   
                 }
             }
         }
