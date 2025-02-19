@@ -12,6 +12,10 @@ pipeline {
                     // Access the Git ref (branch or tag) on Windows using Batch commands
                     def gitRef = bat(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
                     echo "The Git reference (ref) is: ${gitRef}"
+                    def branch = params.BRANCH
+                    echo "Building branch: ${branch}"
+                    def COMMIT = params.COMMIT
+                    echo "Building branch commit: ${COMMIT}"
                 }
             }
         }
