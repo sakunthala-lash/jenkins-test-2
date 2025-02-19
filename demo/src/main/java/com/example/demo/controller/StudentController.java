@@ -23,6 +23,7 @@ import jakarta.validation.Valid;
 @RequestMapping("/students")
 public class StudentController {
 
+    
     @Autowired
     private StudentService studentService;
 
@@ -31,25 +32,34 @@ public class StudentController {
         return studentService.getAllStudents();
     }
 
+
     @GetMapping("/{id}")
     public ResponseEntity<StudentEntity> getStudentById(@PathVariable Long id) {
         StudentEntity student = studentService.getStudentById(id);
         return student != null ? new ResponseEntity<>(student, HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+
+
     @PostMapping
     public ResponseEntity<StudentEntity> createStudent(@RequestBody @Valid StudentEntity student) {
         return new ResponseEntity<>(studentService.createStudent(student), HttpStatus.CREATED);
     }
+
+
 
     @PutMapping("/{id}")
     public ResponseEntity<StudentEntity> updateStudent(@PathVariable Long id, @RequestBody @Valid StudentEntity studentDetails) {
         return new ResponseEntity<>(studentService.updateStudent(id, studentDetails), HttpStatus.OK);
     }
 
+
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteStudent(@PathVariable Long id) {
         studentService.deleteStudent(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+
 }
