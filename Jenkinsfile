@@ -9,18 +9,28 @@ pipeline {
         stage('Extract Payload Data') {
             steps {
                 script {
+                    // Debug: Print the triggerPayload
                     echo "Trigger Payload: ${triggerPayload}"
 
-                    def branchName = jsonPath(triggerPayload, '$.pull_request.head.ref')
-                    def commitSHA = jsonPath(triggerPayload, '$.pull_request.head.sha')
+                    try {
+                        // Assuming triggerPayload is a valid JSON string
+                        def jsonSlurper = new groovy.json.JsonSlurper()
+                        def parsedPayload = jsonSlurper.parseText(triggerPayload)
 
-                    // Assign them to environment variables
-                    env.BRANCH_NAME = branchName
-                    env.COMMIT_SHA = commitSHA
-                    
-                    // Printing out the values to verify
-                    echo "Branch Name: ${env.BRANCH_NAME}"
-                    echo "Commit SHA: ${env.COMMIT_SHA}"
+                        // Extract values from the parsed payload
+                        def branchName = parsedPayload.pull_request.head.ref
+                        def commitSHA = parsedPayload.pull_request.head.sha
+
+                        // Assign them to environment variables
+                        env.BRANCH_NAME = branchName
+                        env.COMMIT_SHA = commitSHA
+
+                        // Debug: Print values
+                        echo "Branch Name: ${env.BRANCH_NAME}"
+                        echo "Commit SHA: ${env.COMMIT_SHA}"
+                    } catch (Exception e) {
+                        echo "Error parsing triggerPayload: ${e.message}"
+                    }
                 }
             }
         }
