@@ -9,7 +9,8 @@ pipeline {
         stage('Extract Payload Data') {
             steps {
                 script {
-                    // Assuming `triggerPayload` is available, extract the branch name and commit SHA
+                    echo "Trigger Payload: ${triggerPayload}"
+
                     def branchName = jsonPath(triggerPayload, '$.pull_request.head.ref')
                     def commitSHA = jsonPath(triggerPayload, '$.pull_request.head.sha')
 
