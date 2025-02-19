@@ -3,34 +3,49 @@ pipeline {
 
     environment {
         GITHUB_REPO = 'https://github.com/sakunthala-lash/jenkins-test-2.git'
-        BRANCH_NAME = jsonPath(triggerPayload, '$.pull_request.head.ref') 
-        COMMIT_SHA = jsonPath(triggerPayload, '$.pull_request.head.sha') 
-         echo "Branch Name: ${env.BRANCH_NAME}"
-         echo "Commit SHA: ${env.COMMIT_SHA}"
     }
+
     stages {
-        stage('Checkout') {
+        stage('Extract Payload Data') {
             steps {
                 script {
-                        echo "Building for all branches"
-                        checkout([
-                             $class: 'GitSCM',
-                            branches: [[name: "refs/heads/${env.BRANCH_NAME}"]],
-                            userRemoteConfigs: [[url: "${GITHUB_REPO}"]]
-                      ])
-                }
-            }
-        }
-        stage('List All Environment Variables') {
-            steps {
-                script {
-                    // Iterate through all environment variables and print them
-                    echo "Listing all available environment variables:"
-                     bat 'set'
+                    // Assuming `triggerPayload` is available, extract the branch name and commit SHA
+                    def branchName = jsonPath(triggerPayload, '$.pull_request.head.ref')
+                    def commitSHA = jsonPath(triggerPayload, '$.pull_request.head.sha')
+
+                    // Assign them to environment variables
+                    env.BRANCH_NAME = branchName
+                    env.COMMIT_SHA = commitSHA
+                    
+                    // Printing out the values to verify
+                    echo "Branch Name: ${env.BRANCH_NAME}"
+                    echo "Commit SHA: ${env.COMMIT_SHA}"
                 }
             }
         }
 
+        stage('Checkout') {
+            steps {
+                script {
+                    echo "Building for branch: ${env.BRANCH_NAME}"
+                    checkout([
+                        $class: 'GitSCM',
+                        branches: [[name: "refs/heads/${env.BRANCH_NAME}"]],
+                        userRemoteConfigs: [[url: "${GITHUB_REPO}"]]
+                    ])
+                }
+            }
+        }
+
+        stage('List All Environment Variables') {
+            steps {
+                script {
+                    // Print all environment variables for debugging
+                    echo "Listing all available environment variables:"
+                    bat 'set'
+                }
+            }
+        }
 
         stage('Build') {
             steps {
@@ -65,8 +80,8 @@ pipeline {
 def githubNotify(String status, String description) {
     withCredentials([string(credentialsId: 'id', variable: 'GITHUB_TOKEN')]) {
         def commitHash = bat(script: 'git rev-parse HEAD', returnStdout: true).trim().split("\r?\n")[-1].trim()
- echo "commitHash: ${commitHash}"
-         echo "commitHash 2:${env.COMMIT_SHA}"
+        echo "commitHash: ${commitHash}"
+
         bat """
             curl -X POST -H "Authorization: token %GITHUB_TOKEN%" ^
             -H "Accept: application/vnd.github.v3+json" ^
