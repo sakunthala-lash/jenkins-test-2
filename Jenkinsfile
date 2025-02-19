@@ -6,18 +6,32 @@ pipeline {
     }
 
     stages {
+        stage('Display Ref') {
+            steps {
+                script {
+                    // Access the Git ref (branch or tag) on Windows using Batch commands
+                    def gitRef = bat(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
+                    echo "The Git reference (ref) is: ${gitRef}"
+                    def branch = params.BRANCH
+                    echo "Building branch: ${branch}"
+                    def COMMIT = params.COMMIT
+                    echo "Building branch commit: ${COMMIT}"
+                }
+            }
+        }
         stage('Checkout') {
             steps {
                 script {
                     echo "Building for PR branch: ${params.GIT_BRANCH}"
                     checkout([
                         $class: 'GitSCM',
-                        branches: [[name: "origin/${params.GIT_BRANCH}"]],
+                        branches: [[name:  ${gitRef}]],
                         userRemoteConfigs: [[url: "${GITHUB_REPO}"]]
                     ])
                 }
             }
         }
+        
         stage('Build') {
             steps {
                 script {
