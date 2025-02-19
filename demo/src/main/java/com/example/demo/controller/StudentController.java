@@ -23,7 +23,6 @@ import jakarta.validation.Valid;
 @RequestMapping("/students")
 public class StudentController {
 
-    
     @Autowired
     private StudentService studentService;
 
