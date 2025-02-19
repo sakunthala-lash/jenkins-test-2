@@ -20,7 +20,7 @@ pipeline {
                 script {
                     checkout([
                         $class: 'GitSCM',
-                        branches: [[name: "refs/heads/${PR_BRANCH_NAME}"]],
+                        branches: [[name: "refs/heads/${env.BRANCH_NAME}"]],
                         userRemoteConfigs: [[url: "${GITHUB_REPO}"]]
                     ])
                 }
