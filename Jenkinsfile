@@ -22,9 +22,7 @@ pipeline {
                 script {
                     // Iterate through all environment variables and print them
                     echo "Listing all available environment variables:"
-                    env.each { key, value ->
-                        echo "${key} = ${value}"
-                    }
+                     bat 'set'
                 }
             }
         }
