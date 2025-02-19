@@ -3,18 +3,14 @@ pipeline {
 
     environment {
         GITHUB_REPO = 'https://github.com/sakunthala-lash/jenkins-test-2.git'
-
     }
 
     stages {
         stage('Extract Payload Data') {
             steps {
                 script {
-                  
-                        // Debug: Print values
                         echo "Branch Name: ${BRANCH_NAME}"
                         echo "Commit SHA: ${COMMIT_SHA}"
-                   
                 }
             }
         }
@@ -74,8 +70,8 @@ pipeline {
 
 def githubNotify(String status, String description) {
     withCredentials([string(credentialsId: 'id', variable: 'GITHUB_TOKEN')]) {
-        def commitHash = bat(script: 'git rev-parse HEAD', returnStdout: true).trim().split("\r?\n")[-1].trim()
-        echo "commitHash: ${commitHash}"
+        //def commitHash = bat(script: 'git rev-parse HEAD', returnStdout: true).trim().split("\r?\n")[-1].trim()
+        def commitHash = ${COMMIT_SHA}
 
         bat """
             curl -X POST -H "Authorization: token %GITHUB_TOKEN%" ^
