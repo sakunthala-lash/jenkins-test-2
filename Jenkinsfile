@@ -3,6 +3,10 @@ pipeline {
 
     environment {
         GITHUB_REPO = 'https://github.com/sakunthala-lash/jenkins-test-2.git'
+        BRANCH_NAME = jsonPath(triggerPayload, '$.pull_request.head.ref') 
+        COMMIT_SHA = jsonPath(triggerPayload, '$.pull_request.head.sha') 
+         echo "Branch Name: ${env.BRANCH_NAME}"
+         echo "Commit SHA: ${env.COMMIT_SHA}"
     }
     stages {
         stage('Checkout') {
@@ -10,10 +14,10 @@ pipeline {
                 script {
                         echo "Building for all branches"
                         checkout([
-                            $class: 'GitSCM',
-                            branches: [[name: 'refs/heads/*']],
+                             $class: 'GitSCM',
+                            branches: [[name: "refs/heads/${env.BRANCH_NAME}"]],
                             userRemoteConfigs: [[url: "${GITHUB_REPO}"]]
-                        ])
+                      ])
                 }
             }
         }
@@ -61,7 +65,8 @@ pipeline {
 def githubNotify(String status, String description) {
     withCredentials([string(credentialsId: 'id', variable: 'GITHUB_TOKEN')]) {
         def commitHash = bat(script: 'git rev-parse HEAD', returnStdout: true).trim().split("\r?\n")[-1].trim()
- echo "commitHash: {$commitHash}"
+ echo "commitHash: ${commitHash}"
+         echo "commitHash 2:${env.COMMIT_SHA}"
         bat """
             curl -X POST -H "Authorization: token %GITHUB_TOKEN%" ^
             -H "Accept: application/vnd.github.v3+json" ^
