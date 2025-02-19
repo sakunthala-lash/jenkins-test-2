@@ -9,8 +9,8 @@ pipeline {
         stage('Extract Payload Data') {
             steps {
                 script {
-                        echo "PR Branch Name: ${PR_BRANCH_NAME}"
-                        echo "PR Commit SHA: ${PR_COMMIT_SHA}"
+                        echo "PR Branch Name: ${env.BRANCH_NAME}"
+                        echo "PR Commit SHA: ${env.GIT_COMMIT}"
                 }
             }
         }
@@ -74,7 +74,7 @@ def githubNotify(String status, String description) {
             curl -X POST -H "Authorization: token %GITHUB_TOKEN%" ^
             -H "Accept: application/vnd.github.v3+json" ^
             -d "{\\"state\\": \\"${status}\\", \\"description\\": \\"${description}\\", \\"context\\": \\"Jenkins CI\\"}" ^
-            "https://api.github.com/repos/sakunthala-lash/jenkins-test-2/statuses/${PR_COMMIT_SHA}"
+            "https://api.github.com/repos/sakunthala-lash/jenkins-test-2/statuses/${env.GIT_COMMIT}"
         """
     }
 }
