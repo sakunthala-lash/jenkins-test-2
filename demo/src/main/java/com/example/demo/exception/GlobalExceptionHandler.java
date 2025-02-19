@@ -20,8 +20,8 @@ import lombok.extern.slf4j.Slf4j;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
-
+    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+     
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<String> handleConstraintViolationException(ConstraintViolationException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
@@ -31,6 +31,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<String> handleEntityNotFoundException(EntityNotFoundException ex) {
+
         logger.warn("Warn level EntityNotFoundException with message only: {}", ex.getMessage()); 
         logger.error("Error level EntityNotFoundException with message only: {}", ex.getMessage());
         logger.info("Info level EntityNotFoundException with message only: {}", ex.getMessage());
