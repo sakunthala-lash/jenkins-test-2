@@ -9,8 +9,8 @@ pipeline {
         stage('Extract Payload Data') {
             steps {
                 script {
-                        echo "Branch Name: ${BRANCH_NAME}"
-                        echo "Commit SHA: ${COMMIT_SHA}"
+                        echo "PR Branch Name: ${PR_BRANCH_NAME}"
+                        echo "PR Commit SHA: ${PR_COMMIT_SHA}"
                 }
             }
         }
@@ -18,10 +18,9 @@ pipeline {
         stage('Checkout') {
             steps {
                 script {
-                    echo "Building for branch: ${env.BRANCH_NAME}"
                     checkout([
                         $class: 'GitSCM',
-                        branches: [[name: "refs/heads/${BRANCH_NAME}"]],
+                        branches: [[name: "refs/heads/${PR_BRANCH_NAME}"]],
                         userRemoteConfigs: [[url: "${GITHUB_REPO}"]]
                     ])
                 }
@@ -71,7 +70,7 @@ pipeline {
 def githubNotify(String status, String description) {
     withCredentials([string(credentialsId: 'id', variable: 'GITHUB_TOKEN')]) {
         //def commitHash = bat(script: 'git rev-parse HEAD', returnStdout: true).trim().split("\r?\n")[-1].trim()
-        def commitHash = ${COMMIT_SHA}
+        def commitHash = ${PR_COMMIT_SHA}
 
         bat """
             curl -X POST -H "Authorization: token %GITHUB_TOKEN%" ^
