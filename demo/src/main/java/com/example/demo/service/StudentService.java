@@ -15,12 +15,12 @@ public class StudentService {
     @Autowired
     private StudentRepository studentRepository;
 
-    public List<StudentEntity> getAllStudents() {
-        return studentRepository.findAll();
+    public List<StudentEntity> getAllStudents() { //get all
+        return studentRepository.findAll(); 
     }
 
     public StudentEntity getStudentById(Long id) {
-        return studentRepository.findById(id).orElse(null);
+        return studentRepository.findById(id).orElse(null); 
     }
 
     public StudentEntity createStudent(StudentEntity student) {
