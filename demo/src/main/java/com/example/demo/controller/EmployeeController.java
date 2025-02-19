@@ -48,12 +48,14 @@ public class EmployeeController {
         return employeeService.getAllEmployees();
     }
 
+    
+
     @GetMapping("/{id}")
     public ResponseEntity<EmployeeEntity> getEmployeeById(@PathVariable Long id) {
         EmployeeEntity employee = employeeService.getEmployeeById(id);
         return employee != null ? new ResponseEntity<>(employee, HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-    
+
 
     @PutMapping("/{id}")
     public ResponseEntity<EmployeeEntity> updateEmployee(@PathVariable Long id, @RequestBody @Valid EmployeeEntity employeeDetails) {
