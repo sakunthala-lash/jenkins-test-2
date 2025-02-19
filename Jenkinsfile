@@ -3,12 +3,11 @@ pipeline {
 
     environment {
         GITHUB_REPO = 'https://github.com/sakunthala-lash/jenkins-test-2.git'
-        BRANCH_NAME = '$.pull_request.head.ref'
-        COMMIT_SHA = '$.pull_request.head.sha'
+
     }
 
     stages {
-        stage('Extract Payload Datas') {
+        stage('Extract Payload Data') {
             steps {
                 script {
                   
