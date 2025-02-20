@@ -1,23 +1,25 @@
 pipeline {
     agent any
-
     triggers {
         githubPush() 
     }
-    
     environment {
         GITHUB_REPO = 'https://github.com/sakunthala-lash/jenkins-test-2.git'
     }
 
     stages {
         stage('Extract Payload Data') {
+        stage('Extract Payload Data') {
             steps {
                 script {
+                        echo "PR Branch Name: ${env.BRANCH_NAME}"
+                        echo "PR Commit SHA: ${env.GIT_COMMIT}"
                         echo "PR Branch Name: ${env.BRANCH_NAME}"
                         echo "PR Commit SHA: ${env.GIT_COMMIT}"
                 }
             }
         }
+
 
         stage('Checkout') {
             steps {
@@ -25,8 +27,18 @@ pipeline {
                     checkout([
                         $class: 'GitSCM',
                         branches: [[name: "refs/heads/${env.BRANCH_NAME}"]],
+                        branches: [[name: "refs/heads/${env.BRANCH_NAME}"]],
                         userRemoteConfigs: [[url: "${GITHUB_REPO}"]]
                     ])
+                }
+            }
+        }
+
+        stage('List All Environment Variables') {
+            steps {
+                script {
+                    echo "Listing all available environment variables:"
+                    bat 'set'
                 }
             }
         }
@@ -49,6 +61,7 @@ pipeline {
                         }
                     } catch (Exception e) {
                         githubNotify('failure', 'Maven build failed. Check logs.')
+                        githubNotify('failure', 'Maven build failed. Check logs.')
                         throw e
                     }
                 }
@@ -60,10 +73,12 @@ pipeline {
         success {
             script {
                 githubNotify('success', 'Jenkins build and tests passed!')
+                githubNotify('success', 'Jenkins build and tests passed!')
             }
         }
         failure {
             script {
+                githubNotify('failure', 'Build or tests failed. Fix before merging!')
                 githubNotify('failure', 'Build or tests failed. Fix before merging!')
             }
         }
@@ -71,13 +86,16 @@ pipeline {
 }
 
 def githubNotify(String status, String description) {
+def githubNotify(String status, String description) {
     withCredentials([string(credentialsId: 'id', variable: 'GITHUB_TOKEN')]) {
+        //def commitHash = bat(script: 'git rev-parse HEAD', returnStdout: true).trim().split("\r?\n")[-1].trim()
         //def commitHash = bat(script: 'git rev-parse HEAD', returnStdout: true).trim().split("\r?\n")[-1].trim()
 
         bat """
             curl -X POST -H "Authorization: token %GITHUB_TOKEN%" ^
             -H "Accept: application/vnd.github.v3+json" ^
             -d "{\\"state\\": \\"${status}\\", \\"description\\": \\"${description}\\", \\"context\\": \\"Jenkins CI\\"}" ^
+            "https://api.github.com/repos/sakunthala-lash/jenkins-test-2/statuses/${env.GIT_COMMIT}"
             "https://api.github.com/repos/sakunthala-lash/jenkins-test-2/statuses/${env.GIT_COMMIT}"
         """
     }
