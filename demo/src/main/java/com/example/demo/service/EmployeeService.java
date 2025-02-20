@@ -53,7 +53,6 @@ public class EmployeeService {
         return updatedEmployee;
     }
 
-
     public void deleteEmployee(Long id) {
         if (!employeeRepository.existsById(id)) {
 			log.info("ID {} not found for the employee deletion", id);
