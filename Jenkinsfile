@@ -1,6 +1,8 @@
 pipeline {
     agent any
-
+    triggers {
+        githubPush() 
+    }
     environment {
         GITHUB_REPO = 'https://github.com/sakunthala-lash/jenkins-test-2.git'
     }
