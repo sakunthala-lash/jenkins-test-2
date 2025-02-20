@@ -1,36 +1,39 @@
 pipeline {
     agent any
-
+    triggers {
+        githubPush() 
+    }
     environment {
         GITHUB_REPO = 'https://github.com/sakunthala-lash/jenkins-test-2.git'
     }
 
     stages {
-        stage('Display Ref') {
+        stage('Extract Payload Data') {
             steps {
                 script {
-                    // Access the Git ref (branch or tag) on Windows using Batch commands
-                    def gitRef = bat(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
-                    echo "The Git reference (ref) is: ${gitRef}"
-                    
-                    // Get commit hash from the current HEAD
-                    def commitHash = bat(script: 'git rev-parse HEAD', returnStdout: true).trim()
-                    echo "Building commit: ${commitHash}"
+                        echo "PR Branch Name: ${env.BRANCH_NAME}"
+                        echo "PR Commit SHA: ${env.GIT_COMMIT}"
                 }
             }
         }
-        
+
         stage('Checkout') {
             steps {
                 script {
-                    echo "Building for PR branch: ${params.GIT_BRANCH}"
-                    
-                    // Checkout specific Git ref
                     checkout([
                         $class: 'GitSCM',
-                        branches: [[name: "*/${gitRef}"]],
+                        branches: [[name: "refs/heads/${env.BRANCH_NAME}"]],
                         userRemoteConfigs: [[url: "${GITHUB_REPO}"]]
                     ])
+                }
+            }
+        }
+
+        stage('List All Environment Variables') {
+            steps {
+                script {
+                    echo "Listing all available environment variables:"
+                    bat 'set'
                 }
             }
         }
@@ -43,7 +46,7 @@ pipeline {
                             bat 'mvn clean install'
                         }
                     } catch (Exception e) {
-                        githubNotify('failure', 'Maven build failed. Check logs.', commitHash)
+                        githubNotify('failure', 'Maven build failed. Check logs.')
                         throw e
                     }
                 }
@@ -54,26 +57,26 @@ pipeline {
     post {
         success {
             script {
-                githubNotify('success', 'Jenkins build and tests passed!', commitHash)
+                githubNotify('success', 'Jenkins build and tests passed!')
             }
         }
         failure {
             script {
-                githubNotify('failure', 'Build or tests failed. Fix before merging!', commitHash)
+                githubNotify('failure', 'Build or tests failed. Fix before merging!')
             }
         }
     }
 }
 
-def githubNotify(String status, String description, String commitHash) {
+def githubNotify(String status, String description) {
     withCredentials([string(credentialsId: 'id', variable: 'GITHUB_TOKEN')]) {
-        echo "Notifying GitHub for commit: ${commitHash}"
+        //def commitHash = bat(script: 'git rev-parse HEAD', returnStdout: true).trim().split("\r?\n")[-1].trim()
 
         bat """
             curl -X POST -H "Authorization: token %GITHUB_TOKEN%" ^
             -H "Accept: application/vnd.github.v3+json" ^
             -d "{\\"state\\": \\"${status}\\", \\"description\\": \\"${description}\\", \\"context\\": \\"Jenkins CI\\"}" ^
-            "https://api.github.com/repos/sakunthala-lash/jenkins-test-2/statuses/${commitHash}"
+            "https://api.github.com/repos/sakunthala-lash/jenkins-test-2/statuses/${env.GIT_COMMIT}"
         """
     }
 }
