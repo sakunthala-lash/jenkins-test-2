@@ -54,7 +54,7 @@ pipeline {
         stage('Run Application') {
             steps {
                 dir("${WORKSPACE}/demo") {
-                    bat 'start java -jar target/demo-0.0.1-SNAPSHOT.jar --server.port=8081'
+                    bat 'start /B java -jar target/demo-0.0.1-SNAPSHOT.jar --server.port=8081'
                 }
             }
         }
