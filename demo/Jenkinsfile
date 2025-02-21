@@ -13,12 +13,9 @@ pipeline {
                 script {
                         echo "PR Branch Name: ${env.BRANCH_NAME}"
                         echo "PR Commit SHA: ${env.GIT_COMMIT}"
-                        echo "PR Branch Name: ${env.BRANCH_NAME}"
-                        echo "PR Commit SHA: ${env.GIT_COMMIT}"
                 }
             }
         }
-
 
         stage('Checkout') {
             steps {
@@ -62,6 +59,11 @@ pipeline {
                         throw e
                     }
                 }
+            }
+        }
+        stage('Run Application') {
+            steps {
+                bat 'java -jar C:/Users/sakua/.jenkins/workspace/Pipeline - 14022025/demo/target/demo-0.0.1-SNAPSHOT.jar'
             }
         }
     }
