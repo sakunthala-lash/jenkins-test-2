@@ -54,7 +54,7 @@ pipeline {
         stage('Run Application') {
             steps {
                 dir("${WORKSPACE}/demo") {
-                    bat '"java -jar target/demo-0.0.1-SNAPSHOT.jar"'
+                    bat 'java -jar target/demo-0.0.1-SNAPSHOT.jar'
                 }
             }
         }
