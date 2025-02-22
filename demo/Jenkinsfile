@@ -54,7 +54,7 @@ pipeline {
         stage('Run Application') {
             steps {
                 dir("${WORKSPACE}/demo") {
-                  bat 'wmic process call create "java -jar target/demo-0.0.1-SNAPSHOT.jar --server.port=8081 > app.log 2>&1"'
+                  bat 'start /min cmd /c "java -jar target/demo-0.0.1-SNAPSHOT.jar --server.port=8081 > app.log 2>&1"'
                 }
             }
         }
