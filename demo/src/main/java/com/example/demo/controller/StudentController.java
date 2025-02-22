@@ -21,8 +21,6 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/students")
 public class StudentController {
-
-
     @Autowired
     private StudentService studentService;
 
