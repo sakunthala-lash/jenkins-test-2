@@ -51,21 +51,24 @@ pipeline {
                 }
             }
         }
-        stage('Run Application') {
+       stage('Run Application') {
             steps {
                 dir("${WORKSPACE}/demo") {
                     powershell '''
-                        # Start Spring Boot app in the background and redirect output to a file
-                        $process = Start-Process -NoNewWindow -FilePath "java" -ArgumentList "-jar target/demo-0.0.1-SNAPSHOT.jar --server.port=8081 --spring.lifecycle.timeout-per-shutdown-phase=20s" -PassThru
+                        # Start Spring Boot app in the background with a hidden window
+                        $process = Start-Process -NoNewWindow -FilePath "java" -ArgumentList "-jar target/demo-0.0.1-SNAPSHOT.jar --server.port=8081 --spring.lifecycle.timeout-per-shutdown-phase=20s" -WindowStyle Hidden -PassThru
+        
+                        # Log Process ID to confirm it's running
                         Write-Host "Spring Boot app started with Process ID: $($process.Id)"
         
-                        # Write logs to a file manually
-                        $process | Out-File -FilePath "app.log" -Append
-                        Write-Host "Logs are saved in app.log"
+                        # Ensure app log output to a file
+                        Start-Process -NoNewWindow -FilePath "cmd" -ArgumentList "/c java -jar target/demo-0.0.1-SNAPSHOT.jar >> app.log 2>&1" -WindowStyle Hidden
+                        Write-Host "Logs are being saved to app.log"
                     '''
                 }
             }
         }
+
 
 
     }
