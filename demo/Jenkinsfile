@@ -54,15 +54,7 @@ pipeline {
        stage('Run Application') {
             steps {
                 dir("${WORKSPACE}/demo") {
-                    // Start the Spring Boot application and redirect logs to app.log
-                    bat 'start /min cmd /c "java -jar target/demo-0.0.1-SNAPSHOT.jar --server.port=8081 > app.log 2>&1 &"'
-                    sleep 20 // Wait for the application to initialize
-        
-                    // Check if the application is running on port 8081
-                    bat 'netstat -ano | findstr :8081' // Should show the port if running
-        
-                    // Display the contents of app.log, or show a message if the log is empty
-                    bat 'type app.log || echo "No logs found."'
+                    bat 'start /min cmd /c "java -jar target/demo-0.0.1-SNAPSHOT.jar --server.port=8081 > app.log 2>&1"'
                 }
             }
         }
