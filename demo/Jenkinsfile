@@ -51,17 +51,16 @@ pipeline {
                 }
             }
         }
-          stage('Run Application') {
+        stage('Run Application') {
             steps {
                 dir("${WORKSPACE}/demo") {
                     powershell '''
-                        Start-Process -NoNewWindow -FilePath "java" -ArgumentList "-jar target/demo-0.0.1-SNAPSHOT.jar --server.port=8081 --spring.lifecycle.timeout-per-shutdown-phase=20s"
-                        Start-Sleep -Seconds 5  # Optional: Ensure app starts before post-action
+                        Start-Process -NoNewWindow -FilePath "java" -ArgumentList "-jar target/demo-0.0.1-SNAPSHOT.jar --server.port=8081 --spring.lifecycle.timeout-per-shutdown-phase=20s" 
+                        Write-Host "Spring Boot app is running in the background..."
                     '''
                 }
             }
         }
-
     }
 
     post {
