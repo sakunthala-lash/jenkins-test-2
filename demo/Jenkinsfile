@@ -55,7 +55,7 @@ pipeline {
             steps {
                 dir("${WORKSPACE}/demo") {
                     bat 'start /B java -jar target/demo-0.0.1-SNAPSHOT.jar --server.port=8081 > app.log 2>&1'
-                    bat 'timeout /t 5'  // Wait for the app to start
+                    bat 'ping -n 6 127.0.0.1 > nul'  // Wait for 5 seconds
                     bat 'type app.log'  // Show initial logs only
                 }
             }
